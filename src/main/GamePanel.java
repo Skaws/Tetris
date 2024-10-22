@@ -1,5 +1,7 @@
 package main;
+import entity.Controller;
 import entity.Player;
+import entity.ShapeHandler;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -23,11 +25,13 @@ public class GamePanel extends JPanel implements Runnable {
     int FPS = 60;
 
     public TileManager tileM = new TileManager(this);
+    public ShapeHandler sHandler  = new ShapeHandler(this,tileM);
     // instantiate keyHandler
     KeyHandler keyH = new KeyHandler();
     // keep it simple as single threaded
     Thread gameThread;
     Player player = new Player(this,keyH);
+    Controller controller = new Controller(this, keyH);
 
     // Set player's default position
     int playerX = 100;
@@ -88,7 +92,7 @@ public class GamePanel extends JPanel implements Runnable {
                 System.out.println("FPS:"+drawCount);
                 drawCount=0;
                 timer=0;
-                tileM.moveShape(tileM.mainShape);
+                sHandler.moveShape(sHandler.mainShape,"down");
             }
             
         }
@@ -96,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
  
     
     public void update(){
-        player.update();
+        controller.update();
     }
     // this method gets called by the repaint method. Graphics g is our pencil/paintbrush
     public void paintComponent(Graphics g){

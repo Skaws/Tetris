@@ -53,6 +53,8 @@ public class Player extends Entity{
         }
         else if(keyH.leftPressed==true){
             x-=speed;
+            
+            gp.sHandler.moveShape(gp.sHandler.mainShape,"left");
         }
         else if(keyH.rightPressed==true){
             x+=speed;
