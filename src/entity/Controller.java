@@ -6,29 +6,47 @@ import main.KeyHandler;
 public class Controller {
     GamePanel gp;
     KeyHandler keyH;
-    int timer;
+    int xpos,ypos;
+    int leftCounter;
+    int rightCounter;
     public Controller(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
         this.keyH = keyH;
-        timer=0;
+        this.leftCounter=0;
+        this.xpos=0;
+        this.ypos=0;
     }
     public void update(){
-        timer++;
-        if(timer>4){
-            if(keyH.leftPressed==true){
+        if(keyH.leftPressed==true){
             
+            if(leftCounter==0){
                 gp.sHandler.moveShape(gp.sHandler.mainShape,"left");
             }
-            if(keyH.rightPressed==true){
-            
+            else if(leftCounter ==5){
+                leftCounter=-1;
+            }
+            leftCounter++;
+        }
+        else if(keyH.leftPressed==false){
+            leftCounter=0;
+        }
+        if(keyH.rightPressed==true){
+            if(rightCounter==0){
                 gp.sHandler.moveShape(gp.sHandler.mainShape,"right");
             }
-            if(keyH.downPressed==true){
-            
-                gp.sHandler.moveShape(gp.sHandler.mainShape,"down");
+            else if(rightCounter ==5){
+                rightCounter=-1;
             }
-            timer=0;
+            rightCounter++;
         }
+        else if(keyH.rightPressed==false){
+            rightCounter=0;
+        }
+        if(keyH.downPressed==true){
+        
+            gp.sHandler.moveShape(gp.sHandler.mainShape,"down");
+        }
+    
         
     }
 }

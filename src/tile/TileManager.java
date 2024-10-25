@@ -18,7 +18,7 @@ public class TileManager {
         tile = new Tile[10];
         mapTileNum = new int[gp.maxScreenCol][gp.maxScreenRow];
         getTileImage();
-        loadMap("/maps/map.txt");
+        loadMap("/maps/tetrisBoard.txt");
         //sHandler = new ShapeHandler(gp);
         // moveShape(lBlock);
         // moveShape(lBlock);
@@ -70,12 +70,13 @@ public class TileManager {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             int col = 0;
             int row = 0;
-
-            while(col<gp.maxScreenCol && row < gp.maxScreenRow){
+            int boardWidth = 12;
+            int boardHeight = 20;
+            while(col<boardWidth && row < boardHeight){
                 // read text line
                 String line = br.readLine();
 
-                while(col < gp.maxScreenCol){
+                while(col < boardWidth){
                     // split the line up into individual array of numbers as strings
                     String numbers[] = line.split(" ");
                     // select an element of the numbers string array and convert it to an int
@@ -87,7 +88,7 @@ public class TileManager {
                     col++;
                     
                 }
-                if(col==gp.maxScreenCol){
+                if(col==boardWidth){
                     col =0;
                     row++;
                 }
@@ -108,16 +109,22 @@ public class TileManager {
         int row = 0;
         int x = 0;
         int y = 0;
+        
+        int boardWidth = 12;
+        int boardHeight = 20;
 
-        while(col < gp.maxScreenCol && row < gp.maxScreenRow){
+        int xOffset = 5 * gp.tileSize;
+        int yOffset = gp.tileSize;
+
+        while(col < boardWidth && row < boardHeight){
             // get the tileID we need to draw from the mapTileNum array
             int tileNum = mapTileNum[col][row];
             // pass it into the tile array so we can cross reference the tileID to its actual image/type
-            g2.drawImage(tile[tileNum].image, x, y, gp.tileSize, gp.tileSize, null);
+            g2.drawImage(tile[tileNum].image, x +xOffset, y +yOffset, gp.tileSize, gp.tileSize, null);
             col++;
             x+=gp.tileSize;
 
-            if(col==gp.maxScreenCol){
+            if(col==boardWidth){
                 col =0;
                 x=0;
                 row++;

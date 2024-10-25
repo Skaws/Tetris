@@ -63,6 +63,21 @@ public class Shape {
             colSize=3;
             rowSize=2;
             break;
+            
+            case 7:
+            int[][] redZ_Matrix = {{7, 0}, {7, 7}, {0, 7}};
+            shapeMatrix=redZ_Matrix;
+            colSize=3;
+            rowSize=2;
+            break;
+
+            case 8:
+            int[][] yellowO_Matrix = {{8, 8}, {8, 8}};
+            shapeMatrix=yellowO_Matrix;
+            colSize=2;
+            rowSize=2;
+            break;
+
         }
         
     }
