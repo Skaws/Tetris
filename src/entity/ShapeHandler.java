@@ -3,21 +3,58 @@ package entity;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import main.GamePanel;
+import minos.Mino_BlueR;
+import minos.Mino_CyanI;
+import minos.Mino_GreenS;
+import minos.Mino_OrangleL;
+import minos.Mino_PurpleT;
+import minos.Mino_RedZ;
+import minos.Mino_YellowO;
 import tile.TileManager;
 
 public class ShapeHandler{
     GamePanel gp;
     TileManager tileM;
     int mapTileNum[][];
-    public Shape mainShape = new Shape(7, 5, 3);
+    int placedBoard[][];
+    public Shape mainShape = new Mino_RedZ(7, 5, 3);
     public ShapeHandler(GamePanel gp, TileManager tileM) {
         this.gp = gp;
         this.tileM = tileM;
         mapTileNum = tileM.mapTileNum;
         // Shape Handler Instantiated call
         System.out.println("Shape Handler Instantiated");
+        placedBoard = copyMatrix(mapTileNum);
         addShape(mainShape);
     }
+
+    public Shape createShape(Shape inputShape, int newShapeID){
+        switch(newShapeID){
+            case 2:
+            inputShape = new Mino_BlueR(2, 5, 3);
+            break;
+            case 3:
+            inputShape = new Mino_CyanI(3, 5, 3);
+            break;
+            case 4:
+            inputShape = new Mino_GreenS(4, 5, 3);
+            break;
+            case 5:
+            inputShape = new Mino_OrangleL(5, 5, 3);
+            break;
+            case 6:
+            inputShape = new Mino_PurpleT(6, 5, 3);
+            break;
+            case 7:
+            inputShape = new Mino_RedZ(7, 5, 3);
+            break;
+            case 8:
+            inputShape = new Mino_YellowO(8, 5, 3);
+            break;
+        }
+        return inputShape;
+    }
+
     public void addShape(Shape currShape){
         System.out.println("Shape adder called");
         int[][] shapeMap = currShape.shapeMatrix;
@@ -67,32 +104,35 @@ public class ShapeHandler{
     public boolean isTileBelowShape(Shape currShape){
         System.out.println("\n o======== Tile Below has been called ===========o \n");
         int[][] shapeMap = currShape.shapeMatrix;
-        // we want to cycle through x elements at the bottom of the shape
+        // create counters to cycle through the shape's coordinates
         int x = 0;
-        int y = currShape.rowSize-1;
-        // hold the value of the tilebelow (0 is nothing, 1 is wall and everything else is a tetris block)
+        int y = 0;
         int tileBelow = 0;
-        while(x<currShape.colSize){
-            System.out.println("NOW the current element at:("+x + "," + y + ") is:" + shapeMap[x][y]);
-            // if the coordinate in the shape matrix isn't empty
+        while(x<currShape.colSize &&y<currShape.rowSize){
+            System.out.println("Current element at:("+x + "," + y + ") is:" + shapeMap[x][y]);
+            // if the current coordinate of the tetromino isn't 0 (so that if we check the actual blocks)
             if(shapeMap[x][y]!=0){
-                // get the value of the tile one y coordinate down
-                tileBelow = mapTileNum[x+currShape.x][y+currShape.y+1];
-                System.out.println("Looking down,Current element at:("+x + "," + (y+1) + ") is:" + tileBelow);
-                // if the tile is anything other than 0, there is a tile below the shape
+                tileBelow = placedBoard[x+currShape.x][y+currShape.y+1];
+                System.out.println("Current element below block at:("+x + "," + y + ") is:" + tileBelow);
                 if(tileBelow!=0){
+                    System.out.println("Collision detected");
                     return true;
                 }
             }
-            
             x++;
+            if(x==currShape.colSize){
+                x=0;
+                y++;
+            }
         }
         return false;
     }
+
     public boolean isTileAdjacentToShape(Shape currShape, String direction){
         int[][] shapeMap = currShape.shapeMatrix;
         // we want to cycle through y elements in the leftmost part of the object
         int x=0;
+        int y=0;
         int dirShift = 1;
         // if we're checking on the right of the shape
         if("right".equals(direction)){
@@ -100,18 +140,21 @@ public class ShapeHandler{
             dirShift=-1;
         }
         int tileLeft = 0;
-        for(int y=0;y<currShape.rowSize;y++){
-            //if we're checking an actual tile in the shape map
+        while(x<currShape.colSize &&y<currShape.rowSize){
+            System.out.println("Current element at:("+x + "," + y + ") is:" + shapeMap[x][y]);
+            // if the current coordinate of the tetromino isn't 0 (so that if we check the actual blocks)
             if(shapeMap[x][y]!=0){
-                System.out.println("\n-------------------------------------------\n");
-                System.out.println("HEY the current element at:("+x + "," + y + ") is:" + shapeMap[x][y]);
-                // get the value of the tile one y coordinate down
-                tileLeft = mapTileNum[x+currShape.x -dirShift][y+currShape.y];
+                tileLeft = placedBoard[x+currShape.x-dirShift][y+currShape.y];
                 System.out.println("Looking " + direction + ", Current element at:("+(x-dirShift) + "," + (y) + ") is:" + tileLeft);
-                // if the tile is anything other than 0, there is a tile left of the shape
                 if(tileLeft!=0){
+                    System.out.println("Collision detected");
                     return true;
                 }
+            }
+            x++;
+            if(x==currShape.colSize){
+                x=0;
+                y++;
             }
         }
         return false;
@@ -157,7 +200,7 @@ public class ShapeHandler{
             restShape();
         }
         // if the shape doesn't have anything beneath it
-        if(underShape==false && "down".equals(direction)){
+        else if(underShape==false && "down".equals(direction)){
             // remove the shape from the map and redraw it at the new location (in this case 1 row below)
             deleteShape(currShape);
             currShape.y++;
@@ -180,8 +223,9 @@ public class ShapeHandler{
         //deleteShape(mainShape);
         mainShape=null;
         System.out.println("Shape has been reset!");
-        int newBlockID = ThreadLocalRandom.current().nextInt(7,9);
-        mainShape = new Shape(newBlockID, 5, 2);
+        placedBoard = copyMatrix(mapTileNum);
+        int newBlockID = ThreadLocalRandom.current().nextInt(2,9);
+        mainShape = createShape(mainShape, newBlockID);
         addShape(mainShape);
         System.out.println("New Shape Created");
         return false;

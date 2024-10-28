@@ -13,12 +13,14 @@ public class Shape {
     public int[][] shapeMatrix;
     public int colSize;
     public int rowSize;
+    public int rotateCount;
 
     public Shape(int shapeID,int x, int y){
         this.shapeID = shapeID;
         this.x = x;
         this.y = y;
-        setupShape();
+        rotateCount=0;
+        //setupShape();
     }
 
     public void setupShape(){
@@ -65,10 +67,10 @@ public class Shape {
             break;
             
             case 7:
-            int[][] redZ_Matrix = {{7, 0}, {7, 7}, {0, 7}};
+            int[][] redZ_Matrix = {{0, 7, 0}, {0, 7, 7}, {0, 0, 7}};
             shapeMatrix=redZ_Matrix;
             colSize=3;
-            rowSize=2;
+            rowSize=3;
             break;
 
             case 8:
