@@ -113,7 +113,7 @@ public class TileManager {
         int boardWidth = 12;
         int boardHeight = 20;
 
-        int xOffset = 5 * gp.tileSize;
+        int xOffset = 12 * gp.tileSize;
         int yOffset = gp.tileSize;
 
         while(col < boardWidth && row < boardHeight){

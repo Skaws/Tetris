@@ -19,9 +19,13 @@ public class Shape {
         this.shapeID = shapeID;
         this.x = x;
         this.y = y;
-        rotateCount=0;
+        this.rotateCount=0;
         //setupShape();
     }
+    public int[][] getNextRotation(){
+        return shapeMatrix;
+    }
+    public void rotate(){}
 
     public void setupShape(){
         // int[][] l_Matrix = { {2, 2, 2}, {0, 0, 2}};

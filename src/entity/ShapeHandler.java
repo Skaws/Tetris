@@ -17,7 +17,9 @@ public class ShapeHandler{
     TileManager tileM;
     int mapTileNum[][];
     int placedBoard[][];
-    public Shape mainShape = new Mino_RedZ(7, 5, 3);
+    int spawnX = 5;
+    int spawnY = 1;
+    public Shape mainShape = new Mino_RedZ(7, spawnX, spawnY);
     public ShapeHandler(GamePanel gp, TileManager tileM) {
         this.gp = gp;
         this.tileM = tileM;
@@ -31,25 +33,25 @@ public class ShapeHandler{
     public Shape createShape(Shape inputShape, int newShapeID){
         switch(newShapeID){
             case 2:
-            inputShape = new Mino_BlueR(2, 5, 3);
+            inputShape = new Mino_BlueR(2, spawnX, spawnY);
             break;
             case 3:
-            inputShape = new Mino_CyanI(3, 5, 3);
+            inputShape = new Mino_CyanI(3, spawnX, spawnY);
             break;
             case 4:
-            inputShape = new Mino_GreenS(4, 5, 3);
+            inputShape = new Mino_GreenS(4, spawnX, spawnY);
             break;
             case 5:
-            inputShape = new Mino_OrangleL(5, 5, 3);
+            inputShape = new Mino_OrangleL(5, spawnX, spawnY);
             break;
             case 6:
-            inputShape = new Mino_PurpleT(6, 5, 3);
+            inputShape = new Mino_PurpleT(6, spawnX, spawnY);
             break;
             case 7:
-            inputShape = new Mino_RedZ(7, 5, 3);
+            inputShape = new Mino_RedZ(7, spawnX, spawnY);
             break;
             case 8:
-            inputShape = new Mino_YellowO(8, 5, 3);
+            inputShape = new Mino_YellowO(8, spawnX, spawnY);
             break;
         }
         return inputShape;
@@ -101,6 +103,32 @@ public class ShapeHandler{
         }
         return copy;
     }
+    public boolean isAreaOccupied(int[][] shapeMat, int shapeX, int shapeY){
+        int x = 0;
+        int y = 0;
+        int evalTile = 0;
+        int colSize = shapeMat.length;
+        int rowSize = shapeMat[0].length; //this gets one column and 1 column contains X rows, thus the size of the column array is the number of rows
+        System.out.println("\n This shape has: " + rowSize + " rows and " + colSize +" columns");
+        while(x<colSize && y<rowSize){
+            System.out.println("Current element at:("+x + "," + y + ") is:" + shapeMat[x][y]);
+            if(shapeMat[x][y]!=0){
+                evalTile = placedBoard[x + shapeX][y+shapeY];
+                System.out.println("\n ----- The current element on the board at:("+x + "," + y + ") is:" + evalTile + "-----");
+                if(evalTile!=0){
+                    System.out.println("Scouted collision detected");
+                    return true;
+                }
+            }
+            x++;
+            if(x==colSize){
+                x=0;
+                y++;
+            }
+        }
+        return false;
+    }
+
     public boolean isTileBelowShape(Shape currShape){
         System.out.println("\n o======== Tile Below has been called ===========o \n");
         int[][] shapeMap = currShape.shapeMatrix;
@@ -216,6 +244,24 @@ public class ShapeHandler{
             currShape.x+=xShift;
             addShape(currShape);
         }
+
+    }
+    public void rotateShape(){
+        System.out.println("rotate function called!");
+        if(mainShape.shapeID==8){
+            System.out.println("can't rotate a square!");
+            return;
+        }
+        boolean canRotate = !(isAreaOccupied(mainShape.getNextRotation(),mainShape.x,mainShape.y));
+        
+        System.out.println("Can we rotate? " + canRotate);
+
+        if(canRotate==true){
+            deleteShape(mainShape);
+            mainShape.rotate();
+            addShape(mainShape);
+        }
+
 
     }
     // rest the shape down so that a new one can be spawned

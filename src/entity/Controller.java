@@ -9,10 +9,12 @@ public class Controller {
     int xpos,ypos;
     int leftCounter;
     int rightCounter;
+    int rotateCounter;
     public Controller(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
         this.keyH = keyH;
         this.leftCounter=0;
+        this.rotateCounter=0;
         this.xpos=0;
         this.ypos=0;
     }
@@ -46,6 +48,19 @@ public class Controller {
         
             gp.sHandler.moveShape(gp.sHandler.mainShape,"down");
         }
+        if(keyH.rotatePressed==true){
+            if(rotateCounter==0){
+                gp.sHandler.rotateShape();
+            }
+            else if(rotateCounter==12){
+                rotateCounter=0;
+            }
+            rotateCounter++;
+        }
+        else if(keyH.rotatePressed==false){
+            rotateCounter=0;
+        }
+    
     
         
     }
