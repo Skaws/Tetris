@@ -11,6 +11,9 @@ public class Mino_CyanI extends Shape{
         shapeMatrix=cyanI_Matrix;
         colSize=4;
         rowSize=4;
+        
+        topLeftX=0;
+        topLeftY=1;
     }
 
     @Override

@@ -13,6 +13,9 @@ public class Mino_BlueR extends Shape{
         shapeMatrix=blueR_Matrix;
         colSize=3;
         rowSize=3;
+        
+        topLeftX=0;
+        topLeftY=0;
     }
     @Override
     public int[][] getNextRotation(){

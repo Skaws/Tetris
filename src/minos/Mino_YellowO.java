@@ -10,6 +10,9 @@ public class Mino_YellowO extends Shape{
         shapeMatrix=yellowO_Matrix;
         colSize=2;
         rowSize=2;
+        
+        topLeftX=0;
+        topLeftY=0;
     }
 
 }

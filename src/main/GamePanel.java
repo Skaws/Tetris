@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+import tile.BoxManager;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -25,7 +26,8 @@ public class GamePanel extends JPanel implements Runnable {
     int FPS = 60;
 
     public TileManager tileM = new TileManager(this);
-    public ShapeHandler sHandler  = new ShapeHandler(this,tileM);
+    public BoxManager boxM = new BoxManager(this);
+    public ShapeHandler sHandler  = new ShapeHandler(this,tileM, boxM);
     // instantiate keyHandler
     KeyHandler keyH = new KeyHandler();
     // keep it simple as single threaded
@@ -111,6 +113,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         tileM.draw(g2);
+        boxM.draw(g2);
         //player.draw(g2);
         g2.dispose();
     }

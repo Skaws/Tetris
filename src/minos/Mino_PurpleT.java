@@ -13,6 +13,9 @@ public class Mino_PurpleT extends Shape{
         shapeMatrix=purpleT_Matrix;
         colSize=3;
         rowSize=3;
+        
+        topLeftX=1;
+        topLeftY=0;
     }
 
     

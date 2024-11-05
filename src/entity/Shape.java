@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 public class Shape {
     // xy coords of the top
 	public int x,y;
+    public int topLeftX, topLeftY;
     public int shapeID;
 
     public BufferedImage blueR,cyanI,greenS,orangeL,purpleT,redZ,yellowO,dark,trueDark;

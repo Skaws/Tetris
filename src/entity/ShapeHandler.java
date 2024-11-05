@@ -10,27 +10,35 @@ import minos.Mino_OrangleL;
 import minos.Mino_PurpleT;
 import minos.Mino_RedZ;
 import minos.Mino_YellowO;
+import tile.BoxManager;
 import tile.TileManager;
 
 public class ShapeHandler{
     GamePanel gp;
     TileManager tileM;
+    BoxManager boxM;
     int mapTileNum[][];
     int placedBoard[][];
     int spawnX = 5;
     int spawnY = 1;
     public Shape mainShape = new Mino_RedZ(7, spawnX, spawnY);
-    public ShapeHandler(GamePanel gp, TileManager tileM) {
+    int currShapeID;
+    int nextShapeID;
+    public ShapeHandler(GamePanel gp, TileManager tileM, BoxManager boxM) {
         this.gp = gp;
         this.tileM = tileM;
+        this.boxM = boxM;
         mapTileNum = tileM.mapTileNum;
         // Shape Handler Instantiated call
         System.out.println("Shape Handler Instantiated");
         placedBoard = copyMatrix(mapTileNum);
-        addShape(mainShape);
+        currShapeID = 7;
+        nextShapeID = ThreadLocalRandom.current().nextInt(2,9);
+        dropNextShape();
     }
 
-    public Shape createShape(Shape inputShape, int newShapeID){
+    public Shape createShape(int newShapeID){
+        Shape inputShape = null;
         switch(newShapeID){
             case 2:
             inputShape = new Mino_BlueR(2, spawnX, spawnY);
@@ -56,7 +64,7 @@ public class ShapeHandler{
         }
         return inputShape;
     }
-
+    // add the current shape object to its given coordinates on screen
     public void addShape(Shape currShape){
         System.out.println("Shape adder called");
         int[][] shapeMap = currShape.shapeMatrix;
@@ -75,6 +83,7 @@ public class ShapeHandler{
             }
         }
     }
+    // remove shape from the screen
     public void deleteShape(Shape currShape){
         System.out.println("Shape deleter called");
         int[][] shapeMap = currShape.shapeMatrix;
@@ -103,6 +112,9 @@ public class ShapeHandler{
         }
         return copy;
     }
+    // Currently used as the rotation checker. It takes a shape's matrix + coordinates 
+    // and then checks the board of currently placed down shapes. If the shape can be placed
+    //  at the coordinates given without causing collisions, the area isn't occupied so it returns false
     public boolean isAreaOccupied(int[][] shapeMat, int shapeX, int shapeY){
         int x = 0;
         int y = 0;
@@ -113,6 +125,7 @@ public class ShapeHandler{
         while(x<colSize && y<rowSize){
             System.out.println("Current element at:("+x + "," + y + ") is:" + shapeMat[x][y]);
             if(shapeMat[x][y]!=0){
+                // get the tile on the board of placed down shapes at coordinates x,y and store it in evalTile
                 evalTile = placedBoard[x + shapeX][y+shapeY];
                 System.out.println("\n ----- The current element on the board at:("+x + "," + y + ") is:" + evalTile + "-----");
                 if(evalTile!=0){
@@ -187,6 +200,8 @@ public class ShapeHandler{
         }
         return false;
     }
+
+    // So far this is where a lot of the game gets run, as move down is called once per second and most actions in game (moving tiles) is run through this method
     public void moveShape(Shape currShape, String direction){
         if(currShape ==null){
             System.out.println("No shape to move!");
@@ -264,16 +279,29 @@ public class ShapeHandler{
 
 
     }
+    public void dropNextShape(){
+        System.out.println("DROP NEXT SHAPE CALLED");
+        System.out.println("Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
+        currShapeID = nextShapeID;
+        nextShapeID = ThreadLocalRandom.current().nextInt(2,9);
+        
+        System.out.println("NOWWW Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
+        mainShape = createShape(currShapeID);
+        addShape(mainShape);
+        // Try creating another shape object to send to the box
+        Shape nextShape = createShape(nextShapeID);
+        boxM.setShape(nextShape);
+        System.out.println("New Shape Created");
+    }
     // rest the shape down so that a new one can be spawned
     public boolean restShape(){
         //deleteShape(mainShape);
+        
+        boxM.clearBox();
         mainShape=null;
         System.out.println("Shape has been reset!");
         placedBoard = copyMatrix(mapTileNum);
-        int newBlockID = ThreadLocalRandom.current().nextInt(2,9);
-        mainShape = createShape(mainShape, newBlockID);
-        addShape(mainShape);
-        System.out.println("New Shape Created");
+        dropNextShape();
         return false;
     }
 }

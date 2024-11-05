@@ -11,6 +11,9 @@ public class Mino_GreenS extends Shape{
         shapeMatrix=greenS_Matrix;
         colSize=3;
         rowSize=3;
+        
+        topLeftX=1;
+        topLeftY=1;
     }
     @Override
     public int[][] getNextRotation(){

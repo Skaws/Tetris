@@ -13,6 +13,9 @@ public class Mino_RedZ extends Shape{
         shapeMatrix=redZ_Matrix;
         colSize=3;
         rowSize=3;
+        
+        topLeftX=0;
+        topLeftY=1;
     }
 
     @Override

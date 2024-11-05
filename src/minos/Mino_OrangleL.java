@@ -14,6 +14,10 @@ public class Mino_OrangleL extends Shape{
         shapeMatrix=orangeL_Matrix;
         colSize=3;
         rowSize=3;
+
+        
+        topLeftX=2;
+        topLeftY=0;
     }
 
     @Override
