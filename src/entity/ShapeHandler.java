@@ -19,8 +19,9 @@ public class ShapeHandler{
     BoxManager boxM;
     int mapTileNum[][];
     int placedBoard[][];
-    int spawnX = 5;
-    int spawnY = 1;
+    int spawnX = 4;
+    int spawnY = 0;
+    int boardHeight, boardWidth;
     public Shape mainShape = new Mino_RedZ(7, spawnX, spawnY);
     int currShapeID;
     int nextShapeID;
@@ -29,6 +30,8 @@ public class ShapeHandler{
         this.tileM = tileM;
         this.boxM = boxM;
         mapTileNum = tileM.mapTileNum;
+        boardHeight = tileM.boardHeight;
+        boardWidth = tileM.boardWidth;
         // Shape Handler Instantiated call
         System.out.println("Shape Handler Instantiated");
         placedBoard = copyMatrix(mapTileNum);
@@ -112,12 +115,19 @@ public class ShapeHandler{
         }
         return copy;
     }
-    // Currently used as the rotation checker. It takes a shape's matrix + coordinates 
+    // Currently used as the rotation checker. It takes a shape's matrix + the coordinates we want to put the shape at 
     // and then checks the board of currently placed down shapes. If the shape can be placed
     //  at the coordinates given without causing collisions, the area isn't occupied so it returns false
+
+    // check if any of the shape's coordinates would be out of bounds (if x = left wallborder OR right wall border OR y = floor OR y = ceiling)
     public boolean isAreaOccupied(int[][] shapeMat, int shapeX, int shapeY){
         int x = 0;
         int y = 0;
+        int leftWallBorder = -1;
+        int ceilingBorder = -1;
+        int floorBorder = boardHeight;
+        int rightWallBorder = boardWidth;
+        int globalTileX,globalTileY;
         int evalTile = 0;
         int colSize = shapeMat.length;
         int rowSize = shapeMat[0].length; //this gets one column and 1 column contains X rows, thus the size of the column array is the number of rows
@@ -125,8 +135,16 @@ public class ShapeHandler{
         while(x<colSize && y<rowSize){
             System.out.println("Current element at:("+x + "," + y + ") is:" + shapeMat[x][y]);
             if(shapeMat[x][y]!=0){
+                globalTileX = x + shapeX;
+                globalTileY = y+shapeY;
+                System.out.println("\n ----- The current Coordinate we're looking at is: ("+globalTileX + "," + globalTileY + ")");
+                // if the spot we're checking is OUT OF BOUNDS
+                if((globalTileX==leftWallBorder||globalTileX==rightWallBorder)|| (globalTileY==ceilingBorder||globalTileY==floorBorder)){
+                    return true;
+                }
+                //if(y+shapeY>boardHeight -1 OR x + shapeX = 0 OR x + shape X =boardWidth-1)
                 // get the tile on the board of placed down shapes at coordinates x,y and store it in evalTile
-                evalTile = placedBoard[x + shapeX][y+shapeY];
+                evalTile = placedBoard[globalTileX][globalTileY];
                 System.out.println("\n ----- The current element on the board at:("+x + "," + y + ") is:" + evalTile + "-----");
                 if(evalTile!=0){
                     System.out.println("Scouted collision detected");
@@ -153,6 +171,10 @@ public class ShapeHandler{
             System.out.println("Current element at:("+x + "," + y + ") is:" + shapeMap[x][y]);
             // if the current coordinate of the tetromino isn't 0 (so that if we check the actual blocks)
             if(shapeMap[x][y]!=0){
+                // if the shape is currently at the bottom of the board, return true for collision
+                if((y+currShape.y+1) == boardHeight){
+                    return true;
+                }
                 tileBelow = placedBoard[x+currShape.x][y+currShape.y+1];
                 System.out.println("Current element below block at:("+x + "," + y + ") is:" + tileBelow);
                 if(tileBelow!=0){
@@ -175,16 +197,22 @@ public class ShapeHandler{
         int x=0;
         int y=0;
         int dirShift = 1;
+        int wallBorderX = -1;
         // if we're checking on the right of the shape
         if("right".equals(direction)){
             x=currShape.colSize-1;
             dirShift=-1;
+            wallBorderX=boardWidth;
         }
         int tileLeft = 0;
         while(x<currShape.colSize &&y<currShape.rowSize){
             System.out.println("Current element at:("+x + "," + y + ") is:" + shapeMap[x][y]);
             // if the current coordinate of the tetromino isn't 0 (so that if we check the actual blocks)
             if(shapeMap[x][y]!=0){
+                // if the shape is currently at the wall border, return true for collision
+                if((x+currShape.x-dirShift) == wallBorderX){
+                    return true;
+                }
                 tileLeft = placedBoard[x+currShape.x-dirShift][y+currShape.y];
                 System.out.println("Looking " + direction + ", Current element at:("+(x-dirShift) + "," + (y) + ") is:" + tileLeft);
                 if(tileLeft!=0){
@@ -279,6 +307,10 @@ public class ShapeHandler{
 
 
     }
+    public int[][] rowChecker(int[][] matBoard){
+        return matBoard;
+    }
+    // sets the current shape to the next one, generates a new shape for the NEXT next shape and renders both in their respective places.
     public void dropNextShape(){
         System.out.println("DROP NEXT SHAPE CALLED");
         System.out.println("Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
@@ -300,7 +332,9 @@ public class ShapeHandler{
         boxM.clearBox();
         mainShape=null;
         System.out.println("Shape has been reset!");
+        // set the current board with the shape rested down to the placed down board matrix
         placedBoard = copyMatrix(mapTileNum);
+        // drop the next shape
         dropNextShape();
         return false;
     }

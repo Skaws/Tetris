@@ -20,7 +20,12 @@ public class Mino_RedZ extends Shape{
 
     @Override
     public int[][] getNextRotation(){
-        return redZ_rotated;
+        if(rotateCount==0){
+            return redZ_rotated;
+        }
+        else{
+            return redZ_Matrix;
+        }
     }
 
     public void rotate(){

@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import javax.imageio.ImageIO;
 import main.GamePanel;
 
@@ -12,15 +13,18 @@ public class TileManager {
     GamePanel gp;
     Tile[] tile;
     public int mapTileNum[][];
-    public int boardWidth = 12;
-    public int boardHeight = 20;
+    public int boardWidth = 10;
+    public int boardHeight = 18;
     //public ShapeHandler sHandler;
     public TileManager(GamePanel gp){
         this.gp = gp;
         tile = new Tile[10];
-        mapTileNum = new int[gp.maxScreenCol][gp.maxScreenRow];
+        mapTileNum = new int[boardWidth][boardHeight];
         getTileImage();
-        loadMap("/maps/tetrisBoard.txt");
+        for(int[] col:mapTileNum){
+            Arrays.fill(col,0);
+        }
+        //loadMap("/maps/tetrisBoard.txt");
         //sHandler = new ShapeHandler(gp);
         // moveShape(lBlock);
         // moveShape(lBlock);
@@ -109,10 +113,15 @@ public class TileManager {
         int row = 0;
         int x = 0;
         int y = 0;
+        int[] ceiling = new int[11];
+        int xOffset = 13 * gp.tileSize;
+        int yOffset = 2 * gp.tileSize;
+        
+        int borderXOffSet = 12 * gp.tileSize;
+        int borderYOffSet = gp.tileSize;
+        Arrays.fill(ceiling, 1);
 
-        int xOffset = 12 * gp.tileSize;
-        int yOffset = gp.tileSize;
-
+        
         while(col < boardWidth && row < boardHeight){
             // get the tileID we need to draw from the mapTileNum array
             int tileNum = mapTileNum[col][row];
@@ -127,6 +136,31 @@ public class TileManager {
                 row++;
                 y+=gp.tileSize;
             }
+        }
+
+        int wallIndex = 3;
+        // draw ceiling
+        for(int i =0; i <12; i++){
+            int ceilX = i * gp.tileSize;
+            g2.drawImage(tile[wallIndex].image, ceilX +borderXOffSet, borderYOffSet, gp.tileSize, gp.tileSize, null);
+        }
+        // draw floor
+        int floorY = 19 * gp.tileSize;
+        for(int j =0; j <12; j++){
+            int ceilX = j * gp.tileSize;
+            g2.drawImage(tile[wallIndex].image, ceilX +borderXOffSet, floorY + borderYOffSet, gp.tileSize, gp.tileSize, null);
+        }
+        //draw left wall
+        for(int l =0; l <20; l++){
+            int wall_L_y = l * gp.tileSize;
+            g2.drawImage(tile[wallIndex].image, borderXOffSet, wall_L_y + borderYOffSet, gp.tileSize, gp.tileSize, null);
+        }
+
+        //draw right wall
+        int rWallX = 11 * gp.tileSize;
+        for(int r =0; r <20; r++){
+            int wall_L_y = r * gp.tileSize;
+            g2.drawImage(tile[wallIndex].image, rWallX + borderXOffSet, wall_L_y + borderYOffSet, gp.tileSize, gp.tileSize, null);
         }
     }
 }

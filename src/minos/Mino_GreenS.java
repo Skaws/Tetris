@@ -17,7 +17,12 @@ public class Mino_GreenS extends Shape{
     }
     @Override
     public int[][] getNextRotation(){
-        return greenS_Rotated;
+        if(rotateCount==0){
+            return greenS_Rotated;
+        }
+        else{
+            return greenS_Matrix;
+        }
     }
 
     @Override
