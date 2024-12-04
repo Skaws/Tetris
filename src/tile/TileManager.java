@@ -138,7 +138,7 @@ public class TileManager {
             }
         }
 
-        int wallIndex = 3;
+        int wallIndex = 1;
         // draw ceiling
         for(int i =0; i <12; i++){
             int ceilX = i * gp.tileSize;

@@ -1,4 +1,5 @@
 package main;
+import entity.BackgroundHandler;
 import entity.Controller;
 import entity.Player;
 import entity.ShapeHandler;
@@ -19,8 +20,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxScreenCol = 36;
     public final int maxScreenRow = 22;
     // get screen width by multiplying the number of screen columns by the pixel size of each column element (tiles)
-    public final int screenWidth = maxScreenCol * tileSize; //960 pixels
-    public final int screenHeight = maxScreenRow * tileSize; //720 pixels
+    public final int screenWidth = maxScreenCol * tileSize; //1152 pixels
+    public final int screenHeight = maxScreenRow * tileSize; //704 pixels
 
     // FPS
     int FPS = 60;
@@ -28,13 +29,15 @@ public class GamePanel extends JPanel implements Runnable {
     public TileManager tileM = new TileManager(this);
     public BoxManager boxM = new BoxManager(this);
     public ShapeHandler sHandler  = new ShapeHandler(this,tileM, boxM);
+    PlayManager playM = new PlayManager(this);
+    BackgroundHandler bgHandler = new BackgroundHandler();
     // instantiate keyHandler
     KeyHandler keyH = new KeyHandler();
     // keep it simple as single threaded
     Thread gameThread;
     Player player = new Player(this,keyH);
     Controller controller = new Controller(this, keyH);
-
+    public boolean pause = false;
     // Set player's default position
     int playerX = 100;
     int playerY = 100;
@@ -94,7 +97,6 @@ public class GamePanel extends JPanel implements Runnable {
                 System.out.println("FPS:"+drawCount);
                 drawCount=0;
                 timer=0;
-                sHandler.moveShape(sHandler.mainShape,"down");
             }
             
         }
@@ -103,6 +105,7 @@ public class GamePanel extends JPanel implements Runnable {
     
     public void update(){
         controller.update();
+        playM.update();
     }
     // this method gets called by the repaint method. Graphics g is our pencil/paintbrush
     public void paintComponent(Graphics g){
@@ -111,7 +114,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         
         Graphics2D g2 = (Graphics2D) g;
-
+        bgHandler.draw(g2);
         tileM.draw(g2);
         boxM.draw(g2);
         //player.draw(g2);

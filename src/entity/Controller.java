@@ -46,7 +46,7 @@ public class Controller {
         }
         if(keyH.downPressed==true){
         
-            gp.sHandler.moveShape(gp.sHandler.mainShape,"down");
+            gp.sHandler.moveShape(gp.sHandler.mainShape,"input down");
         }
         if(keyH.rotatePressed==true){
             if(rotateCounter==0){

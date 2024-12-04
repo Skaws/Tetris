@@ -21,7 +21,13 @@ public class ShapeHandler{
     int placedBoard[][];
     int spawnX = 4;
     int spawnY = 0;
+    int restCounter = 0;
+    public int slideCounter;
+    public boolean shapeSliding;
+    public boolean underShape;
+    public boolean belowNewPos;
     int boardHeight, boardWidth;
+    boolean restPause = false;
     public Shape mainShape = new Mino_RedZ(7, spawnX, spawnY);
     int currShapeID;
     int nextShapeID;
@@ -238,7 +244,7 @@ public class ShapeHandler{
         System.out.println("n==============================================\n");
         System.out.println("Our shape is currently at coordinates (" + currShape.x + "," + currShape.y + ")");
         System.out.println("n==============================================\n");
-        boolean underShape = isTileBelowShape(currShape);
+        underShape = isTileBelowShape(currShape);
         boolean adjacentToShape = false;
         System.out.println("Is there a tile below our shape? "+underShape);
         // if we're dealing with a horizontal direction move
@@ -267,25 +273,61 @@ public class ShapeHandler{
         }
         
         if(underShape==true){
-            System.out.println("00000000000 PUT DOWN THE OBJECT 00000000000000");
-            restShape();
+            shapeSliding=true;
+            System.out.println("TIME TO SLIDE");
+            // if("auto down".equals(direction)){
+            //     shapeSliding=true;
+            //     System.out.println("TIME TO SLIDE");
+            // }
+            
+            // if(restCounter==2){
+            //     System.out.println("00000000000 PUT DOWN THE OBJECT 00000000000000");
+            //     restShape();
+            //     restCounter=0;
+            // }
+            // System.out.println("00000000000 PUT DOWN THE OBJECT 00000000000000");
+            // restShape();
+            // return;
+            // System.out.println("---------- TIME TO SLIDE! ------------");
+            // shapeSliding=true;
+            // if(slideCounter>=60){
+            //     System.out.println("00000000000 PUT DOWN THE OBJECT 00000000000000");
+            //     restShape();
+            //     shapeSliding=false;
+            //     slideCounter=0;
+            // }
         }
         // if the shape doesn't have anything beneath it
-        else if(underShape==false && "down".equals(direction)){
+        else if(underShape==false && ("input down".equals(direction)|| "auto down".equals(direction))){
+            slideCounter =0;
+            restCounter=0;
+            shapeSliding=false;
             // remove the shape from the map and redraw it at the new location (in this case 1 row below)
             deleteShape(currShape);
             currShape.y++;
             addShape(currShape);
+
         }
         
         // if the shape doesn't have anything left/right of it
-        else if(adjacentToShape==false && ("left".equals(direction) ||("right".equals(direction)))){
+        if(adjacentToShape==false && ("left".equals(direction) ||("right".equals(direction)))){
             
             // remove the shape from the map and redraw it at the new location 
             // (in this case 1 row left OR right depending on direction input)
             deleteShape(currShape);
             currShape.x+=xShift;
             addShape(currShape);
+        }
+        
+        belowNewPos = isTileBelowShape(currShape);
+        if(belowNewPos==true){
+            shapeSliding=true;
+            System.out.println("TIME TO SLIDE");
+        }
+        else{
+            System.out.println("---------------- SLIDING OVER----------- \n ------------- OBJECT MOVED TO DESCENDABLE POSITION -------------");
+            //slideCounter=0;
+            shapeSliding=false;
         }
 
     }
@@ -316,6 +358,8 @@ public class ShapeHandler{
         System.out.println("Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
         currShapeID = nextShapeID;
         nextShapeID = ThreadLocalRandom.current().nextInt(2,9);
+        // int randFactor = ThreadLocalRandom.current().nextInt(0,2);
+        // nextShapeID = 3 + (4*randFactor);
         
         System.out.println("NOWWW Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
         mainShape = createShape(currShapeID);
