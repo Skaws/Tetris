@@ -11,6 +11,7 @@ public class RowManager {
 		int[] firstDivCol;
 		int[] secondDivCol;
 		int[] finalCol = new int[matHeight];
+		System.out.println("----------- ROW DELETER CALLED FOR ROW:" + rowID + "----------------------");
 		//go through every column (as matrices are indexed via column > row)
 		for(int x =0; x<matWidth; x++){
 			//copy
@@ -57,7 +58,9 @@ public class RowManager {
 			// once at the end of the row reset X and set rowFull to True
 			if(x==matWidth){
 				if(isRowFull==true){
+					// copy the current array of full rows into an array 1 element larger (store this back in fullrows again)
 					fullRows= Arrays.copyOf(fullRows, (fullRows.length+1));
+					// add the full row's coordinate to the end of the fullrows array
 					fullRows[fullRows.length-1]=y;
 				}
 				x=0;

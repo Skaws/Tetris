@@ -14,6 +14,15 @@ public class RowCheckerTest {
 		int[] fullRows = rManager.rowChecker(sampleMatrix);
 		assertArrayEquals(expectedOutput,fullRows);
 	}
+
+	@Test
+	public void test_RowCheckerMixed() {
+		int[][] sampleMatrix = {{0,1,1,1},{0,1,0,1},{0,1,1,1},{0,1,1,1}};
+		int[] expectedOutput = {3,1};
+		RowManager rManager = new RowManager();
+		int[] fullRows = rManager.rowChecker(sampleMatrix);
+		assertArrayEquals(expectedOutput,fullRows);
+	}
 	// deletes row two of the following matrix
 	/*
 	 0 0 0 0

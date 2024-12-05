@@ -17,8 +17,9 @@ public class ShapeHandler{
     GamePanel gp;
     TileManager tileM;
     BoxManager boxM;
+    RowManager rowM;
     int mapTileNum[][];
-    int placedBoard[][];
+    public int placedBoard[][];
     int spawnX = 4;
     int spawnY = 0;
     int restCounter = 0;
@@ -35,6 +36,7 @@ public class ShapeHandler{
         this.gp = gp;
         this.tileM = tileM;
         this.boxM = boxM;
+        rowM = new RowManager();
         mapTileNum = tileM.mapTileNum;
         boardHeight = tileM.boardHeight;
         boardWidth = tileM.boardWidth;
@@ -349,9 +351,6 @@ public class ShapeHandler{
 
 
     }
-    public int[][] rowChecker(int[][] matBoard){
-        return matBoard;
-    }
     // sets the current shape to the next one, generates a new shape for the NEXT next shape and renders both in their respective places.
     public void dropNextShape(){
         System.out.println("DROP NEXT SHAPE CALLED");
@@ -378,6 +377,22 @@ public class ShapeHandler{
         System.out.println("Shape has been reset!");
         // set the current board with the shape rested down to the placed down board matrix
         placedBoard = copyMatrix(mapTileNum);
+        // get the list of rows that are full of tetromino blocks
+        int[] completeRows = rowM.rowChecker(placedBoard);
+        // if there are rows that are full
+        if(completeRows.length>0){
+            // for each complete row
+            for(int i = 0; i<completeRows.length;i++){
+                System.out.println("Currently on row: " + completeRows[i]);
+                // get the complete row location (from the list of complete rows) and delete them
+                placedBoard=rowM.rowDeleter(placedBoard, (completeRows[i])+i);
+                // it is worth noting that the intended row coordinates (lets say rows 17, 14 and 12 need deleting) will be shifted once a deletion has been made
+                // however as this deletes from the bottom up, the row coordinate shift will always be by the current number of deletions that have occured
+                // e.g. if row 17 is deleted that's a 1 coordinate shift and thus row 14 would be row 15 in the new board
+                // if row 14 *(now 15) is deleted that's another 1 coord shift, now 2 coord shifts total, meaning row 12 would be NEW row 14
+            }
+        }
+        tileM.mapTileNum=copyMatrix(placedBoard);
         // drop the next shape
         dropNextShape();
         return false;
