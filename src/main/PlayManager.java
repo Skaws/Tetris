@@ -52,6 +52,15 @@ public class PlayManager {
         g2.setStroke(new BasicStroke(10f));
 		g2.setFont(new Font("Arial", Font.PLAIN, 30));
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2.drawString("SCORE:", xOffset + gp.tileSize + 12, yOffset - 20);
+        g2.drawString("SCORE:" + gp.score, xOffset + gp.tileSize + 12, yOffset - 20);
+
+		if(gp.pauseGame==true){
+			g2.setColor(Color.YELLOW);
+			
+			g2.setStroke(new BasicStroke(10f));
+			
+		g2.setFont(new Font("Arial", Font.PLAIN, 50));
+			g2.drawString("PAUSED!", (gp.screenWidth/2) - (gp.tileSize *3), gp.screenHeight/2);
+		}
 	}
 }

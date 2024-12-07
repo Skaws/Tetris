@@ -362,6 +362,7 @@ public class ShapeHandler{
         
         System.out.println("NOWWW Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
         mainShape = createShape(currShapeID);
+        mainShape.y-=mainShape.topLeftY;
         addShape(mainShape);
         // Try creating another shape object to send to the box
         Shape nextShape = createShape(nextShapeID);
@@ -379,8 +380,9 @@ public class ShapeHandler{
         placedBoard = copyMatrix(mapTileNum);
         // get the list of rows that are full of tetromino blocks
         int[] completeRows = rowM.rowChecker(placedBoard);
+        int fullRowNum = completeRows.length;
         // if there are rows that are full
-        if(completeRows.length>0){
+        if(fullRowNum>0){
             // for each complete row
             for(int i = 0; i<completeRows.length;i++){
                 System.out.println("Currently on row: " + completeRows[i]);
@@ -391,6 +393,7 @@ public class ShapeHandler{
                 // e.g. if row 17 is deleted that's a 1 coordinate shift and thus row 14 would be row 15 in the new board
                 // if row 14 *(now 15) is deleted that's another 1 coord shift, now 2 coord shifts total, meaning row 12 would be NEW row 14
             }
+            gp.score+=((fullRowNum*2)-1) * 100;
         }
         tileM.mapTileNum=copyMatrix(placedBoard);
         // drop the next shape
