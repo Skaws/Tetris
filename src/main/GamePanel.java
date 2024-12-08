@@ -38,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     Player player = new Player(this,keyH);
     Controller controller = new Controller(this, keyH);
     public boolean pauseGame = false;
+    public boolean gameOver = false;
     public int score=0;
     public int baseReward = 40;
     int pauseCountPress =0;
@@ -110,19 +111,30 @@ public class GamePanel extends JPanel implements Runnable {
         System.out.println("Is the game paused?" + pauseGame);
         
         System.out.println("Has P been pressed" + keyH.pausePressed);
-        if(pauseGame==false){
+        if(pauseGame==false && gameOver==false){
             controller.update();
             playM.update();
         }
-        if(keyH.pausePressed==true){
-            if(pauseCountPress==1){
-                pauseGame=!pauseGame;
+        if(gameOver==true){
+            if(keyH.rotatePressed==true){
+                //restart game, clear board
+                sHandler.clearBoard();
+                score=0;
+                gameOver=false;
             }
-            pauseCountPress++;
         }
         else{
-            pauseCountPress=0;
+            if(keyH.pausePressed==true){
+                if(pauseCountPress==1){
+                    pauseGame=!pauseGame;
+                }
+                pauseCountPress++;
+            }
+            else{
+                pauseCountPress=0;
+            }
         }
+        
     }
     // this method gets called by the repaint method. Graphics g is our pencil/paintbrush
     public void paintComponent(Graphics g){

@@ -48,6 +48,21 @@ public class ShapeHandler{
         dropNextShape();
     }
 
+    public void clearBoard(){
+        // erase the board by going through every column in the board and filling it with 0s
+        for(int[] col:tileM.mapTileNum){
+            Arrays.fill(col,0);
+        }
+        // set local mtn = object counterpart
+        mapTileNum=tileM.mapTileNum;
+        // erase the placedBoard tiles too
+        placedBoard = copyMatrix(mapTileNum);
+        // clear the next tile box too
+        boxM.clearBox();
+        // start the game again
+        dropNextShape();
+        
+    }
     public Shape createShape(int newShapeID){
         Shape inputShape = null;
         switch(newShapeID){
@@ -355,19 +370,30 @@ public class ShapeHandler{
     public void dropNextShape(){
         System.out.println("DROP NEXT SHAPE CALLED");
         System.out.println("Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
+        // set the current shapeID to the next shape (which we've had loading and displayed in game), then generate the ID for the future next shape
         currShapeID = nextShapeID;
         nextShapeID = ThreadLocalRandom.current().nextInt(2,9);
         // int randFactor = ThreadLocalRandom.current().nextInt(0,2);
         // nextShapeID = 3 + (4*randFactor);
         
+        //create the next shape object to be added
         System.out.println("NOWWW Current Shape ID is: " + currShapeID + ", next Shape ID is: " + nextShapeID);
         mainShape = createShape(currShapeID);
         mainShape.y-=mainShape.topLeftY;
-        addShape(mainShape);
-        // Try creating another shape object to send to the box
-        Shape nextShape = createShape(nextShapeID);
-        boxM.setShape(nextShape);
-        System.out.println("New Shape Created");
+        // evaluate if this new shape can be added to the board OR if the board is full
+        boolean isGameOver = isAreaOccupied(mainShape.shapeMatrix, spawnX, spawnY);
+        if(isGameOver==true){
+            gp.gameOver=true;
+            System.out.println("And that's all!! Game OVER!!");
+        }
+        // if the game isn't over add the next shape to the board and then add the next generated shape to the box
+        else{
+            addShape(mainShape);
+            // Try creating another shape object to send to the box
+            Shape nextShape = createShape(nextShapeID);
+            boxM.setShape(nextShape);
+            System.out.println("New Shape Created");
+        }
     }
     // rest the shape down so that a new one can be spawned
     public boolean restShape(){

@@ -29,7 +29,6 @@ public class TileManager {
         // moveShape(lBlock);
         // moveShape(lBlock);
     }
-
     public void getTileImage(){
         try {
             tile[0] = new Tile();
