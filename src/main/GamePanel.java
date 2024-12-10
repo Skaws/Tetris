@@ -43,6 +43,8 @@ public class GamePanel extends JPanel implements Runnable {
     public boolean pauseGame = false;
     public boolean gameOver = false;
     public int score=0;
+    public int level = 1;
+    public int lines = 0;
     public int baseReward = 40;
     int pauseCountPress =0;
     // Set player's default position

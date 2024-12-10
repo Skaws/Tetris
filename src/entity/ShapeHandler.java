@@ -411,7 +411,6 @@ public class ShapeHandler{
     // rest the shape down so that a new one can be spawned
     public boolean restShape(){
         //deleteShape(mainShape);
-        
         boxM.clearBox();
         mainShape=null;
         System.out.println("Shape has been reset!");
@@ -432,9 +431,19 @@ public class ShapeHandler{
                 // e.g. if row 17 is deleted that's a 1 coordinate shift and thus row 14 would be row 15 in the new board
                 // if row 14 *(now 15) is deleted that's another 1 coord shift, now 2 coord shifts total, meaning row 12 would be NEW row 14
             }
-            gp.score+=((fullRowNum*2)-1) * 100;
+            // if the player gets a tetris (clears 4 lines at once)
+            if(fullRowNum==4){
+                gp.score+=800;
+            }
+            else{
+                gp.score+=((fullRowNum*2)-1) * 100;
+            }
+            gp.lines+=fullRowNum;
             
             gp.sfx.play(1, false);
+        }
+        else{
+            gp.sfx.play(4, false);
         }
         tileM.mapTileNum=copyMatrix(placedBoard);
         // drop the next shape

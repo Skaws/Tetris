@@ -17,6 +17,7 @@ public class PlayManager {
     BoxManager boxM;
     public ShapeHandler sHandler;
 	RowManager rowM;
+	int dropInterval = 60;
 	public PlayManager(GamePanel gp) {
 		this.gp = gp;
 		sHandler = gp.sHandler;
@@ -27,7 +28,7 @@ public class PlayManager {
 	public void update() {
 		currFrame++;
 		//System.out.println("Currently on frame: " +currFrame);
-		if(currFrame>=60){
+		if(currFrame>=dropInterval){
 			
 			sHandler.moveShape(sHandler.mainShape,"auto down");
 			currFrame=0;
@@ -53,6 +54,10 @@ public class PlayManager {
 		g2.setFont(new Font("Arial", Font.PLAIN, 30));
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.drawString("SCORE:" + gp.score, xOffset + gp.tileSize + 12, yOffset - 20);
+		
+        g2.drawString("LEVEL:" + gp.level, xOffset + gp.tileSize + 12, yOffset - 20 +gp.tileSize*2);
+
+        g2.drawString("LINES:" + gp.lines, xOffset + gp.tileSize + 12, yOffset - 20 +gp.tileSize*4);
 		if(gp.gameOver==true){
 			g2.setColor(Color.WHITE);
 			
