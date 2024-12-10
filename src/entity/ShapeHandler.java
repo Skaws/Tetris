@@ -290,6 +290,7 @@ public class ShapeHandler{
         }
         
         if(underShape==true){
+            
             shapeSliding=true;
             System.out.println("TIME TO SLIDE");
             // if("auto down".equals(direction)){
@@ -338,6 +339,9 @@ public class ShapeHandler{
         
         belowNewPos = isTileBelowShape(currShape);
         if(belowNewPos==true){
+            if(shapeSliding==false){
+                gp.sfx.play(4, false);
+            }
             shapeSliding=true;
             System.out.println("TIME TO SLIDE");
         }
@@ -362,6 +366,14 @@ public class ShapeHandler{
             deleteShape(mainShape);
             mainShape.rotate();
             addShape(mainShape);
+            gp.sfx.play(3, false);
+        }
+        // when sliding if the shape can be rotated to keep moving, then the program needs to check for that
+        underShape = isTileBelowShape(mainShape);
+        if(underShape==false){
+            slideCounter =0;
+            restCounter=0;
+            shapeSliding=false;
         }
 
 
@@ -385,6 +397,7 @@ public class ShapeHandler{
         if(isGameOver==true){
             gp.gameOver=true;
             System.out.println("And that's all!! Game OVER!!");
+            gp.sfx.play(2, false);
         }
         // if the game isn't over add the next shape to the board and then add the next generated shape to the box
         else{
@@ -420,6 +433,8 @@ public class ShapeHandler{
                 // if row 14 *(now 15) is deleted that's another 1 coord shift, now 2 coord shifts total, meaning row 12 would be NEW row 14
             }
             gp.score+=((fullRowNum*2)-1) * 100;
+            
+            gp.sfx.play(1, false);
         }
         tileM.mapTileNum=copyMatrix(placedBoard);
         // drop the next shape

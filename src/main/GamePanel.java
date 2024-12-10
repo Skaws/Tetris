@@ -26,6 +26,9 @@ public class GamePanel extends JPanel implements Runnable {
     // FPS
     int FPS = 60;
 
+    public static Sound music = new Sound();
+    public static Sound sfx = new Sound();
+
     public TileManager tileM = new TileManager(this);
     public BoxManager boxM = new BoxManager(this);
     public ShapeHandler sHandler  = new ShapeHandler(this,tileM, boxM);
@@ -64,6 +67,9 @@ public class GamePanel extends JPanel implements Runnable {
         // 
         gameThread = new Thread(this);
         gameThread.start();
+
+        music.play(0, true);
+        music.loop();
     }
 
     // starting the thread will call the run method here
@@ -108,15 +114,15 @@ public class GamePanel extends JPanel implements Runnable {
  
     
     public void update(){
-        System.out.println("Is the game paused?" + pauseGame);
+        //System.out.println("Is the game paused?" + pauseGame);
         
-        System.out.println("Has P been pressed" + keyH.pausePressed);
+        //System.out.println("Has P been pressed" + keyH.pausePressed);
         if(pauseGame==false && gameOver==false){
             controller.update();
             playM.update();
         }
         if(gameOver==true){
-            if(keyH.rotatePressed==true){
+            if(keyH.gameOverRestartPressed==true){
                 //restart game, clear board
                 sHandler.clearBoard();
                 score=0;
