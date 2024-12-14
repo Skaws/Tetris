@@ -433,12 +433,21 @@ public class ShapeHandler{
             }
             // if the player gets a tetris (clears 4 lines at once)
             if(fullRowNum==4){
-                gp.score+=800;
+                gp.score+=(800*gp.level);
             }
             else{
-                gp.score+=((fullRowNum*2)-1) * 100;
+                gp.score+=((fullRowNum*2)-1) * (100*gp.level);
             }
             gp.lines+=fullRowNum;
+            if((gp.lines/10) ==gp.level){
+                gp.level++;
+                if(gp.playM.dropInterval>10){
+                    gp.playM.dropInterval-=10;
+                }
+                else if(gp.playM.dropInterval>1){
+                    gp.playM.dropInterval-=1;
+                }
+            }
             
             gp.sfx.play(1, false);
         }

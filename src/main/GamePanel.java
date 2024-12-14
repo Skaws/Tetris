@@ -32,7 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
     public TileManager tileM = new TileManager(this);
     public BoxManager boxM = new BoxManager(this);
     public ShapeHandler sHandler  = new ShapeHandler(this,tileM, boxM);
-    PlayManager playM = new PlayManager(this);
+    public PlayManager playM = new PlayManager(this);
     BackgroundHandler bgHandler = new BackgroundHandler();
     // instantiate keyHandler
     KeyHandler keyH = new KeyHandler();
@@ -109,6 +109,8 @@ public class GamePanel extends JPanel implements Runnable {
                 System.out.println("FPS:"+drawCount);
                 drawCount=0;
                 timer=0;
+                
+			    System.out.println("Drop interval is:" +playM.dropInterval);
             }
             
         }
@@ -128,6 +130,8 @@ public class GamePanel extends JPanel implements Runnable {
                 //restart game, clear board
                 sHandler.clearBoard();
                 score=0;
+                level=1;
+                lines=0;
                 gameOver=false;
             }
         }

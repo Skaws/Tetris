@@ -17,7 +17,7 @@ public class PlayManager {
     BoxManager boxM;
     public ShapeHandler sHandler;
 	RowManager rowM;
-	int dropInterval = 60;
+	public int dropInterval = 60;
 	public PlayManager(GamePanel gp) {
 		this.gp = gp;
 		sHandler = gp.sHandler;
@@ -29,7 +29,6 @@ public class PlayManager {
 		currFrame++;
 		//System.out.println("Currently on frame: " +currFrame);
 		if(currFrame>=dropInterval){
-			
 			sHandler.moveShape(sHandler.mainShape,"auto down");
 			currFrame=0;
 		}
@@ -37,7 +36,7 @@ public class PlayManager {
 			System.out.println(" SUPER SHAPE SLIDING TIME");
 			System.out.println(" slide counter is at: " +sHandler.slideCounter);
 			sHandler.slideCounter++;
-			if(sHandler.slideCounter>=60 && sHandler.underShape==true){
+			if(sHandler.slideCounter>=45 && sHandler.underShape==true){
 				sHandler.restShape();
 				sHandler.shapeSliding=false;
 			}
