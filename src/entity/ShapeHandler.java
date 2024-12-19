@@ -324,6 +324,9 @@ public class ShapeHandler{
             deleteShape(currShape);
             currShape.y++;
             addShape(currShape);
+            if("input down".equals(direction)){
+                gp.score+=1;
+            }
 
         }
         
