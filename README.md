@@ -4,4 +4,4 @@ This project was made as a personal challenge to recreate one of my favourite vi
 
 # How to Run
 
-The game can be run by compling Main.java via "javac Main.java" and then executing it via "java Main". Alternitavely opening the directory in an IDE and running Main should suffice.
+The game can be run by compling Main.java via "javac Main.java" and then executing it via "java Main". Alternatively opening the directory in an IDE and running Main should suffice.
