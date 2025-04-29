@@ -13,7 +13,7 @@ public class Main {
         window.setTitle("Tetris");
 
         // instantiate our gamePanel and add it to the window.
-        GamePanel gamePanel = new GamePanel();
+        GamePanel gamePanel = new GamePanel(window);
         window.add(gamePanel);
         // size the window to fit the preferred size and layouts of its subcomponents
         window.pack();

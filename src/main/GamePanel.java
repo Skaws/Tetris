@@ -7,7 +7,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import tile.BoxManager;
 import tile.TileManager;
 
@@ -28,12 +30,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static Sound music = new Sound();
     public static Sound sfx = new Sound();
-
+    HighScoreManager hScoreManager;
     public TileManager tileM = new TileManager(this);
     public BoxManager boxM = new BoxManager(this);
     public ShapeHandler sHandler  = new ShapeHandler(this,tileM, boxM);
     public PlayManager playM = new PlayManager(this);
     BackgroundHandler bgHandler = new BackgroundHandler();
+    // Get Parent window
+    JFrame parentWindow;
     // instantiate keyHandler
     KeyHandler keyH = new KeyHandler();
     // keep it simple as single threaded
@@ -42,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
     Controller controller = new Controller(this, keyH);
     public boolean pauseGame = false;
     public boolean gameOver = false;
+    public boolean enterScore = false;
     public int score=0;
     public int level = 1;
     public int lines = 0;
@@ -53,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
     int playerSpeed = 4;
 
 
-    public GamePanel(){
+    public GamePanel(JFrame window){
         // all these methods are from JPanel as this class extends it
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
         this.setBackground(Color.BLACK);
@@ -63,8 +68,14 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         // focus GamePanel to receive key input
         this.setFocusable(true);
+        this.parentWindow= window;
+        hScoreManager = new HighScoreManager(parentWindow, this);
+
     }
-    
+    public void getParentWindow(){
+        parentWindow = (JFrame) SwingUtilities.getWindowAncestor(this);
+        hScoreManager = new HighScoreManager(parentWindow, this);
+    }
     public void startGameThread(){
         // 
         gameThread = new Thread(this);
@@ -126,13 +137,27 @@ public class GamePanel extends JPanel implements Runnable {
             playM.update();
         }
         if(gameOver==true){
-            if(keyH.gameOverRestartPressed==true){
+            enterScore=false;
+            if(enterScore==true){
+                hScoreManager.openScoreWindow();
+                if(keyH.downPressed==true){
+                    enterScore=false;
+                }
+                // Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+                // System.out.println("Enter username");
+
+                // String userName = myObj.nextLine();  // Read user input
+                // System.out.println("Username is: " + userName);  // Output user input
+            }
+            else if(keyH.gameOverRestartPressed==true){
+                playM.writeScore();
                 //restart game, clear board
                 sHandler.clearBoard();
                 score=0;
                 level=1;
                 lines=0;
                 gameOver=false;
+                playM.dropInterval=60;
             }
         }
         else{

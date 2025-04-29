@@ -399,6 +399,7 @@ public class ShapeHandler{
         boolean isGameOver = isAreaOccupied(mainShape.shapeMatrix, spawnX, spawnY);
         if(isGameOver==true){
             gp.gameOver=true;
+            gp.enterScore=true;
             System.out.println("And that's all!! Game OVER!!");
             gp.sfx.play(2, false);
         }

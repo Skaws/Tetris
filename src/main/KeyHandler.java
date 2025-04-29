@@ -6,9 +6,11 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener{
     public boolean upPressed,downPressed,leftPressed,rightPressed, rotatePressed, gameOverRestartPressed;
     public boolean pausePressed = false;
+    public String strTyped = "";
 
     @Override
     public void keyTyped(KeyEvent e) {
+        strTyped=Character.toString(e.getKeyChar());
     }
 
     @Override
